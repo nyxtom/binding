@@ -26,14 +26,15 @@ import {
 import {SVGAnalyzer} from './svg';
 
 export class ObserverLocator {
-  static inject = [TaskQueue, EventManager, DirtyChecker, SVGAnalyzer];
+  static inject = [TaskQueue, EventManager, DirtyChecker, SVGAnalyzer, Parser];
 
-  constructor(taskQueue, eventManager, dirtyChecker, svgAnalyzer) {
+  constructor(taskQueue, eventManager, dirtyChecker, svgAnalyzer, parser) {
     this.taskQueue = taskQueue;
     this.eventManager = eventManager;
     this.dirtyChecker = dirtyChecker;
     this.svgAnalyzer = svgAnalyzer;
     this.adapters = [];
+    this.parser = parser;
   }
 
   getObserver(obj, propertyName) {
@@ -131,7 +132,7 @@ export class ObserverLocator {
     descriptor = Object.getPropertyDescriptor(obj, propertyName);
 
     if (hasDeclaredDependencies(descriptor)) {
-      return new ComputedPropertyObserver(obj, propertyName, descriptor, this)
+      return new ComputedPropertyObserver(obj, propertyName, descriptor, this);
     }
 
     let existingGetterOrSetter;
